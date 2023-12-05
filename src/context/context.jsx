@@ -2,6 +2,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import  { createContext, useContext, useState } from "react";
 
+import { messages } from "../helpers/message";
+
 const userContext = createContext();
 
 const initialState = {
@@ -26,22 +28,12 @@ export const UserProvider = (props)=>{
             localStorage.setItem("user",JSON.stringify(userLogin));
             setUser(userLogin);
             navigate('/employees');
-            Swal.fire({
-                icon:"success",
-                title:data.message,
-                showConfirmButton:false,
-                timer:1500,
-            });
+            messages("success",data.message,false,1500);
         }
         
     } catch (error) {
        if(!error.response.data.ok){
-        return Swal.fire({
-            icon:"error",
-            title:error.response.data.message,
-            showConfirmButton:false,
-            timer:1500,
-        })
+        return  messages("error",error.response.data.message,false,1500); 
        }
        console.log("error function login: ",error.message)
     }
@@ -53,22 +45,12 @@ export const UserProvider = (props)=>{
         if(data.ok){
             
             navigate('/');
-            Swal.fire({
-                icon:"success",
-                title:data.message,
-                showConfirmButton:false,
-                timer:1500,
-            });
+            messages("success",data.message,false,1500);
         }
         
     } catch (error) {
        if(!error.response.data.ok){
-        return Swal.fire({
-            icon:"error",
-            title:error.response.data.message,
-            showConfirmButton:false,
-            timer:1500,
-        })
+        return  messages("error",error.response.data.message,false,1500); 
        }
        console.log("error function register: ",error.message)
     }
@@ -93,7 +75,7 @@ export const UserProvider = (props)=>{
 export function UseUser(){
     const context = useContext(userContext)
     if(!context){
-        throw new Error("context error in use user")
+        throw new Error("context error in useUser")
     }
     return context;
 }

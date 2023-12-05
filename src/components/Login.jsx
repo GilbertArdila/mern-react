@@ -2,7 +2,8 @@ import { useState } from "react";
 import { FaUserTie } from "react-icons/fa6";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
-import Swal from "sweetalert2";
+import { messages } from "../helpers/message";
+
 
 import { UseUser } from "../context/context";
 import { useNavigate } from "react-router-dom";
@@ -23,13 +24,8 @@ const Login = () => {
 
   const onLogin = (e) => {
     e.preventDefault();
-    if(dataUser.email === '' || dataUser.password === ''){
-      return Swal.fire({
-        icon:"error",
-        title:"Email or Password must not be empty",
-        showConfirmButton:false,
-        timer:1500,
-    })
+    if(!dataUser.email  || !dataUser.password ){
+    return  messages("error","All the fields are required",false,1500);
     }
     loginUser(dataUser,navigate)
   }

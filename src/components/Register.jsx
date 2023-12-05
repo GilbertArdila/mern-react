@@ -2,7 +2,8 @@ import { useState } from "react";
 import { FaUserPlus } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
-import Swal from "sweetalert2";
+import { messages } from "../helpers/message";
+
 
 import { UseUser } from "../context/context";
 import { useNavigate } from "react-router-dom";
@@ -19,13 +20,9 @@ const Register = () => {
 
   const onRegister = (e) => {
     e.preventDefault();
-    if(dataUser.email === '' || dataUser.password === '' || dataUser.name === ''){
-      return Swal.fire({
-        icon:"error",
-        title:"nor Email, password or name must be empty",
-        showConfirmButton:false,
-        timer:1500,
-    })
+    if(!dataUser.email  || !dataUser.password || !dataUser.name ){
+    return  messages("error","All the fields are required",false,1500);
+       
     }
     registerUser(dataUser,navigate);
   }
@@ -36,10 +33,10 @@ const Register = () => {
         <div className="col-md-6 mx-auto">
           <div className="card">
             <div className="container text-center mt-3">
-              <FaUserPlus style={{ "font-size": "3em" }} />
+              <FaUserPlus style={{ "fontSize": "3em" }} />
             </div>
             <div className="card-header text-center mt-3">
-              <h4>Registro de jefe</h4>
+              <h4>Registro de nuevo jefe</h4>
             </div>
           </div>
 
