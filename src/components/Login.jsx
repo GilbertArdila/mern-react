@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { loginUser } = UseUser();
+  const { actions } = UseUser();
   const [dataUser, setDataUser] = useState({ email: '', password: '' });
   const [watchPassword, setWatchPassword] = useState(false);
 
@@ -27,7 +27,7 @@ const Login = () => {
     if(!dataUser.email  || !dataUser.password ){
     return  messages("error","All the fields are required",false,1500);
     }
-    loginUser(dataUser,navigate)
+    actions(dataUser,navigate)
   }
 
   return (

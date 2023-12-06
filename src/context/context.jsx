@@ -1,5 +1,4 @@
 import axios from "axios";
-
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { messages } from "../helpers/message";
@@ -24,45 +23,34 @@ export const UserProvider = (props) => {
   }, [])
 
 
-  const loginUser = async (dataUser, navigate) => {
+  const actions = async (dataUser, navigate) => {
     try {
-      const { data } = await axios.post("http://localhost:4000/users/login", dataUser);
-      if (data.ok) {
+      let data = {};
+      dataUser.name ? data = await axios.post("/users/register", dataUser) :
+      data = await axios.post("/users/login", dataUser);
+
+     
+      if (data.data.ok) {
         const userLogin = {
           login: true,
-          token: data.data.token,
-          name: data.data.name
+          token: data.data.data.token,
+          name: data.data.data.name
         };
         localStorage.setItem("user", JSON.stringify(userLogin));
         setUser(userLogin);
-        navigate('/employees');
-        messages("success", data.message, false, 1500);
+        navigate('/employees') 
+        messages("success", data.data.message, false, 1500);
       }
 
     } catch (error) {
       if (!error.response.data.ok) {
         return messages("error", error.response.data.message, false, 1500);
       }
-      console.log("error function login: ", error.message)
+      console.log("error function actions: ", error.message)
     }
   }
 
-  const registerUser = async (dataUser, navigate) => {
-    try {
-      const { data } = await axios.post("http://localhost:4000/users/register", dataUser);
-      if (data.ok) {
-
-        navigate('/');
-        messages("success", data.message, false, 1500);
-      }
-
-    } catch (error) {
-      if (!error.response.data.ok) {
-        return messages("error", error.response.data.message, false, 1500);
-      }
-      console.log("error function register: ", error.message)
-    }
-  }
+  
 
 
   const exit = () => {
@@ -71,8 +59,7 @@ export const UserProvider = (props) => {
   }
 
   const value = {
-    loginUser,
-    registerUser,
+    actions,
     exit,
     user
   };

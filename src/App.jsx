@@ -3,9 +3,15 @@ import Login from "./components/Login";
 import Nav from "./components/Nav";
 import Employees from "./components/Employees";
 import Register from "./components/Register";
+import axios from "axios";
+import { UseUser } from "./context/context";
+
+
+axios.defaults.baseURL = 'http://localhost:4000';
 
 function App() {
-  
+  const {user} = UseUser();
+  axios.defaults.headers.common['Authorization']=`Bearer ${user.token}`
   
 
   return (

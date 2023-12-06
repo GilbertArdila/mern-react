@@ -8,21 +8,31 @@ import { UseUser } from "../context/context";
 import { messages } from "../helpers/message";
 import axios from "axios";
 import Swal from "sweetalert2";
+import ModifyModal from "./ModifyModal";
 
 
 const Employees = () => {
   const {user} = UseUser();
   const [employees, setEmployees] = useState([]);
+  const [employee, setEmployee] = useState();
+
+  /**to use the modal */
+  const [isEdit, setIsEdit] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const onOpenModal = (isEdit,employee) =>{
+    setOpen(true);
+    setIsEdit(isEdit);
+    setEmployee(employee);
+  } ;
+
+  const onCloseModal = () => setOpen(false);
 
  
 
   const getEmployees = useCallback(async() =>{
     try {
-      const {data} = await axios.get("http://localhost:4000/employees/boss",{
-        headers:{
-          Authorization: `Bearer ${user.token}`
-        }
-      })
+      const {data} = await axios.get("/employees/boss")
       setEmployees(data.data);
     } catch (error) {
       if (!error.response.data.ok) {
@@ -30,7 +40,7 @@ const Employees = () => {
       }
       console.log("error function login: ", error.message)
     }
-  },[user.token]);
+  },[]);
 
   useEffect(() => {
     getEmployees();
@@ -47,11 +57,7 @@ const Employees = () => {
       confirmButtonText:"I now what I´m doing"
     }).then(async(result) =>{
       if(result.isConfirmed){
-        axios.delete(`http://localhost:4000/employees/delete/${id}`,{
-          headers:{
-            Authorization: `Bearer ${user.token}`
-          }
-        });
+        axios.delete(`/employees/delete/${id}`);
         
        
         messages("success","the employee has been removed",false,1500);
@@ -65,7 +71,7 @@ const Employees = () => {
       <nav className="navbar py-4">
         <div className="container">
           <div className="col-md-3">
-            <button className="btn btn-primary"><FaUserPlus/> Add employee</button>
+            <button className="btn btn-primary" onClick={() => onOpenModal(false,{})}><FaUserPlus/> Add employee</button>
           </div>
           <div className="col-md-6">
             <div className="input-group">
@@ -91,7 +97,7 @@ const Employees = () => {
                         <th>middleName</th>
                         <th>lastName</th>
                         <th>motherLastName</th>
-                        <th>contractType</th>
+                        <th>contract-Type</th>
                         <th>identification</th>
                         <th>options</th>
                         
@@ -101,15 +107,15 @@ const Employees = () => {
                     {employees.map((item,i)=>(
                       <tr key={item._id}>
                          <td>{i +1}</td>
-                         <td>{item.firstName}</td>
-                         <td>{item.middleName}</td>
-                         <td>{item.lastName}</td>
-                         <td>{item.motherLastName}</td>
-                         <td>{item.contractType}</td>
+                         <td>{item.firstName.charAt(0).toUpperCase() + item.firstName.slice(1)}</td>
+                         <td>{item.middleName.charAt(0).toUpperCase() + item.middleName.slice(1)}</td>
+                         <td>{item.lastName.charAt(0).toUpperCase() + item.lastName.slice(1)}</td>
+                         <td>{item.motherLastName.charAt(0).toUpperCase() + item.motherLastName.slice(1)}</td>
+                         <td>{item.contractType.charAt(0).toUpperCase() + item.contractType.slice(1)}</td>
                          <td>{item.id}</td>
                          <td>
                           <button className="btn btn-danger me-2" onClick={() => deleteEmployees(item._id)}><FaRegTrashAlt/></button>
-                          <button className="btn btn-warning"><FaPencilAlt/></button>
+                          <button className="btn btn-warning" onClick={() => onOpenModal(true,item)}><FaPencilAlt/></button>
                          </td>
                       </tr>
                     ))}
@@ -122,6 +128,7 @@ const Employees = () => {
           </div>
         </div>
       </section>
+      <ModifyModal onCloseModal={onCloseModal} open={open} getEmployees={getEmployees} isEdit={isEdit} employee={employee} />
     </div>
   )
 }

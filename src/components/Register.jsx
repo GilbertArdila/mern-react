@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { registerUser } = UseUser();
+  const { actions } = UseUser();
   const [dataUser, setDataUser] = useState({ email: '', password: '',name:'' });
   const [watchPassword, setWatchPassword] = useState(false);
 
@@ -24,7 +24,7 @@ const Register = () => {
     return  messages("error","All the fields are required",false,1500);
        
     }
-    registerUser(dataUser,navigate);
+    actions(dataUser,navigate);
   }
 
   return (
