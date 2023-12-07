@@ -48,13 +48,13 @@ const Employees = () => {
 
   const deleteEmployees = async (id) =>{
     Swal.fire({
-      title:"A U sure?",
+      title:"hey man, are you sure?",
       text:"This action can not be undone",
       icon:"warning",
       showCancelButton:true,
       confirmButtonColor:"#3085d6",
       cancelButtonColor:"#d33",
-      confirmButtonText:"I now what I´m doing"
+      confirmButtonText:"Yeah, do it"
     }).then(async(result) =>{
       if(result.isConfirmed){
         axios.delete(`/employees/delete/${id}`);
@@ -64,6 +64,25 @@ const Employees = () => {
          getEmployees();
       }
     })
+  }
+
+  /**to search input */
+  const search = async (value) =>{
+    const lowercase = value.toLowerCase();
+    try {
+      if(value === ""){
+        return getEmployees();
+      }
+      const {data} = await axios.get(`/employees/search/${lowercase}`)
+      setEmployees(data.data);
+    } catch (error) {
+      if(error.response.status === 404){
+        messages("error","No coincidences found",false,1500);
+        return getEmployees();
+      }
+      console.log("search:"+error)
+    }
+   
   }
   
   return (
@@ -75,7 +94,9 @@ const Employees = () => {
           </div>
           <div className="col-md-6">
             <div className="input-group">
-              <input className="form-control" type="search" placeholder="Search..." aria-label="Search" required/>
+              <input className="form-control" type="search" placeholder="Search..." aria-label="Search" 
+              required
+              onChange={(e)=>search(e.target.value)}/>
             </div>
           </div>
         </div>
