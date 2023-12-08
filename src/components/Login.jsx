@@ -3,11 +3,11 @@ import { FaUserTie } from "react-icons/fa6";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import { messages } from "../helpers/message";
-
-
-import { UseUser } from "../context/context";
 import { useNavigate } from "react-router-dom";
 
+import { UseUser } from "../context/context";
+
+import Spinner from "./Spinner";
 
 
 
@@ -17,17 +17,26 @@ const Login = () => {
   const { actions } = UseUser();
   const [dataUser, setDataUser] = useState({ email: '', password: '' });
   const [watchPassword, setWatchPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleOnChange = (e) => {
     setDataUser({ ...dataUser, [e.target.name]: e.target.value })
   }
 
-  const onLogin = (e) => {
-    e.preventDefault();
-    if(!dataUser.email  || !dataUser.password ){
-    return  messages("error","All the fields are required",false,1500);
+  const onLogin = async (e) => {
+    try {
+       e.preventDefault();
+    if (!dataUser.email || !dataUser.password) {
+      return messages("error", "All the fields are required", false, 1500);
     }
-    actions(dataUser,navigate)
+    setLoading(true);
+    await actions(dataUser, navigate);
+    setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log('Error from onLogin: ',error);
+    }
+   
   }
 
   return (
@@ -44,8 +53,9 @@ const Login = () => {
           </div>
 
           <div className="card-body">
+
             <form onSubmit={(e) => onLogin(e)} >
-             
+
 
               <div className="mb-3">
                 <label className="form-label">Email</label>
@@ -62,8 +72,11 @@ const Login = () => {
                 <input type={!watchPassword ? "password" : "text"} name="password" className="form-control"
                   onChange={(e) => handleOnChange(e)} />
               </div>
+              {loading ? (
+              <Spinner />
+             
+              ) : <button type="submit" className="form-control btn btn-primary ">Login</button>}
 
-              <button type="submit" className="form-control btn btn-primary ">Login</button>
             </form>
           </div>
         </div>

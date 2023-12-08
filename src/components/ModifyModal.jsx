@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Modal } from 'react-responsive-modal';
-import { messages } from '../helpers/message';
 
+import { messages } from '../helpers/message';
+import Spinner from './Spinner';
 
 // eslint-disable-next-line react/prop-types
 const ModifyModal = ({ onCloseModal, open, getEmployees, isEdit, employee }) => {
+
+  const [loading, setLoading] = useState(false);
   
   const initialState = {
     firstName: "",
@@ -35,10 +38,11 @@ const ModifyModal = ({ onCloseModal, open, getEmployees, isEdit, employee }) => 
   const formAction = async (e)=>{
     try {
       e.preventDefault();
-      let data = {};// eslint-disable-next-line react/prop-types
+      let data = {};
+      setLoading(true);// eslint-disable-next-line react/prop-types
        isEdit ? data = await axios.patch(`/employees/update/${employee._id}`,dataEmployee) : 
         data = await axios.post("/employees",dataEmployee);
-      
+       setLoading(false);
       
       messages("success",data.data.message,false,1500);
       onCloseModal();
@@ -132,7 +136,8 @@ const ModifyModal = ({ onCloseModal, open, getEmployees, isEdit, employee }) => 
                 </select>
               </div>
               <div className="mb-3">
-                <button type="submit" className="btn btn-primary form-control">{isEdit ? "Update" : "Save"}</button>
+                {loading ? (<Spinner/>):
+                <button type="submit" className="btn btn-primary form-control">{isEdit ? "Update" : "Save"}</button>}
               </div>
               
             </form>

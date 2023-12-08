@@ -3,28 +3,40 @@ import { FaUserPlus } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import { messages } from "../helpers/message";
-
+import { useNavigate } from "react-router-dom";
 
 import { UseUser } from "../context/context";
-import { useNavigate } from "react-router-dom";
+import Spinner from "./Spinner";
+
+
+
 
 const Register = () => {
   const navigate = useNavigate();
   const { actions } = UseUser();
   const [dataUser, setDataUser] = useState({ email: '', password: '',name:'' });
   const [watchPassword, setWatchPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleOnChange = (e) => {
     setDataUser({ ...dataUser, [e.target.name]: e.target.value })
   }
 
-  const onRegister = (e) => {
-    e.preventDefault();
+  const onRegister = async (e) => {
+    try {
+      e.preventDefault();
     if(!dataUser.email  || !dataUser.password || !dataUser.name ){
     return  messages("error","All the fields are required",false,1500);
        
     }
-    actions(dataUser,navigate);
+    setLoading(true);
+    await actions(dataUser,navigate);
+    setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log('Error from onRegister: ',error)
+    }
+    
   }
 
   return (
@@ -65,8 +77,10 @@ const Register = () => {
                 <input type={!watchPassword ? "password" : "text"} name="password" className="form-control"
                   onChange={(e) => handleOnChange(e)} />
               </div>
-
+              {loading ? (<Spinner/>):
               <button type="submit" className="form-control btn btn-primary ">Register</button>
+              }
+              
             </form>
           </div>
         </div>
