@@ -8,6 +8,9 @@ import { UseUser } from "../context/context";
 const AllEmployees = () => {
   const {user} = UseUser();
     const [allEmployees, setAllEmployees] = useState([]);
+    const [tableEmployees, setTableEmployees] = useState([]);
+    const [searchedTerm, setSearchedTerm] = useState("");
+
     const [loading, setLoading] = useState(false);
 
     const getAllEmployees = useCallback(async () => {
@@ -15,6 +18,7 @@ const AllEmployees = () => {
           setLoading(true);
           const { data } = await axios.get("/employees");
           setAllEmployees(data.data);
+          setTableEmployees(data.data);
           setLoading(false);
           
         } catch (error) {
@@ -31,6 +35,23 @@ const AllEmployees = () => {
       getAllEmployees();
       
       }, [getAllEmployees])
+
+      const handleOnChange = (e) =>{
+        setSearchedTerm(e.target.value)
+        search(e.target.value)
+      }
+
+      const search = (term)=>{
+        var searchedTerm = tableEmployees.filter((element)=>{
+         if(element.firstName.toString().toLowerCase().includes(term.toLowerCase()) ||
+         element.lastName.toString().toLowerCase().includes(term.toLowerCase())||
+         element.middleName.toString().toLowerCase().includes(term.toLowerCase())||
+         element.motherLastName.toString().toLowerCase().includes(term.toLowerCase())){
+             return element;
+         }
+        });
+        setAllEmployees(searchedTerm);
+     }
       
 
   return (
@@ -40,8 +61,14 @@ const AllEmployees = () => {
           
           <div className="col-md-6">
             <div className="input-group">
-              <input className="form-control" type="search" placeholder="Search..." aria-label="Search"
-                required
+              <input 
+              className="form-control" 
+              type="search" 
+              placeholder="Search..." 
+              aria-label="Search"
+              value={searchedTerm}
+              onChange={handleOnChange}
+              required
                  />
             </div>
           </div>
@@ -53,7 +80,7 @@ const AllEmployees = () => {
             <div className="col-md-12">
               <div className="card">
                 <div className="card-header">
-                  <h4>Bienvenido {user.name}</h4>
+                  <h4>Bienvenido {user.name} a la lista de todos los empleados</h4>
                 </div>
                 <table className="table-responsive-lg">
                   <div className="table table-striped">
@@ -74,7 +101,7 @@ const AllEmployees = () => {
 
                       <tbody>
 
-                        {allEmployees.map((item, i) => (
+                        {allEmployees && allEmployees.map((item, i) => (
                           <tr key={item._id}>
                             <td>{i + 1}</td>
                             <td>{item.firstName.charAt(0).toUpperCase() + item.firstName.slice(1)}</td>

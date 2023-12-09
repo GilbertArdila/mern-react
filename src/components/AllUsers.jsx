@@ -8,6 +8,9 @@ import { UseUser } from "../context/context";
 const AllUsers = () => {
     const {user} = UseUser();
     const [allUsers, setAllUsers] = useState([]);
+    const [tableUsers, setTableUsers] = useState([]);
+    const [searchedTerm, setSearchedTerm] = useState("");
+
     const [loading, setLoading] = useState(false);
 
     const getAllUsers = useCallback(async () => {
@@ -15,6 +18,7 @@ const AllUsers = () => {
           setLoading(true);
           const { data } = await axios.get("/users/list");
           setAllUsers(data.data);
+          setTableUsers(data.data);
           setLoading(false);
           
         } catch (error) {
@@ -31,6 +35,22 @@ const AllUsers = () => {
         getAllUsers();
       
       }, [getAllUsers])
+
+      const handleOnChange = (e) =>{
+        setSearchedTerm(e.target.value)
+        search(e.target.value)
+      }
+
+      const search = (term)=>{
+        var searchedTerm = tableUsers.filter((element)=>{
+         if(element.role.toString().toLowerCase().includes(term.toLowerCase()) ||
+         element.name.toString().toLowerCase().includes(term.toLowerCase())||
+         element.email.toString().toLowerCase().includes(term.toLowerCase())){
+             return element;
+         }
+        });
+        setAllUsers(searchedTerm);
+     }
       
 
   return (
@@ -40,8 +60,11 @@ const AllUsers = () => {
           
           <div className="col-md-6">
             <div className="input-group">
-              <input className="form-control" type="search" placeholder="Search..." aria-label="Search"
-                required
+              <input 
+              className="form-control" type="search" placeholder="Search..." aria-label="Search"
+              value={searchedTerm}
+              onChange={handleOnChange}
+              required
                  />
             </div>
           </div>
@@ -53,7 +76,7 @@ const AllUsers = () => {
             <div className="col-md-6 mx-auto">
               <div className="card">
                 <div className="card-header ">
-                  <h4>Bienvenido {user.name}</h4>
+                  <h4>Bienvenido {user.name} a lista de todos los usuarios</h4>
                 </div>
                 <table className="table-responsive-lg">
                   <div className="table table-striped">
