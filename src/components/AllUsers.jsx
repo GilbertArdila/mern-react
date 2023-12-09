@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { messages } from "../helpers/message";
 import Loading from "./Loading";
 import { UseUser } from "../context/context";
+import { capitalizeFirstLetter } from "../helpers/capitalize";
 
 const AllUsers = () => {
     const {user} = UseUser();
@@ -96,9 +97,9 @@ const AllUsers = () => {
                         {allUsers.map((item, i) => (
                           <tr key={item._id}>
                             <td>{i + 1}</td>
-                            <td>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</td>
+                            <td>{capitalizeFirstLetter(item.name)}</td>
                             <td>{item.email.toUpperCase()}</td>
-                            <td>{item.role.charAt(0).toUpperCase() + item.role.slice(1)}</td>
+                            <td>{capitalizeFirstLetter(item.role)}</td>
                            
                           </tr>
                         ))}

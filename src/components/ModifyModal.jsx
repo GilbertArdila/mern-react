@@ -31,7 +31,18 @@ const ModifyModal = ({ onCloseModal, open, getEmployees, isEdit, employee }) => 
   
 
   const handleChange=(e)=>{
-     setDataEmployee({...dataEmployee,[e.target.name]:e.target.value});
+    let data = e.target.value;
+    /**assuring send only lowercase to DB */
+    if (typeof data === "object") {
+      for (const key in data) {
+        if (Object.hasOwnProperty.call(data, key)) {
+          data[key] = data[key].toLowerCase();
+        }
+      }
+    } else if (typeof data === "string") {
+      data = data.toLowerCase();
+    }
+     setDataEmployee({...dataEmployee,[e.target.name]:data});
   }
   
 

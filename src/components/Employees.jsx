@@ -9,6 +9,7 @@ import { UseUser } from "../context/context";
 import { messages } from "../helpers/message";
 import ModifyModal from "./ModifyModal";
 import Loading from "./Loading";
+import { capitalizeFirstLetter } from "../helpers/capitalize";
 
 
 const Employees = () => {
@@ -136,11 +137,11 @@ const Employees = () => {
                         {employees.map((item, i) => (
                           <tr key={item._id}>
                             <td>{i + 1}</td>
-                            <td>{item.firstName.charAt(0).toUpperCase() + item.firstName.slice(1)}</td>
-                            <td>{item.middleName.charAt(0).toUpperCase() + item.middleName.slice(1)}</td>
-                            <td>{item.lastName.charAt(0).toUpperCase() + item.lastName.slice(1)}</td>
-                            <td>{item.motherLastName.charAt(0).toUpperCase() + item.motherLastName.slice(1)}</td>
-                            <td>{item.contractType.charAt(0).toUpperCase() + item.contractType.slice(1)}</td>
+                            <td>{capitalizeFirstLetter(item.firstName)}</td>
+                            <td>{capitalizeFirstLetter(item.middleName)}</td>
+                            <td>{capitalizeFirstLetter(item.lastName)}</td>
+                            <td>{capitalizeFirstLetter(item.motherLastName)}</td>
+                            <td>{capitalizeFirstLetter(item.contractType)}</td>
                             <td>{item.id}</td>
                             <td>
                               <button className="btn btn-danger me-2" onClick={() => deleteEmployees(item._id)}><FaRegTrashAlt /></button>

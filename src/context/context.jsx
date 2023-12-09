@@ -25,6 +25,7 @@ export const UserProvider = (props) => {
 
 
   const actions = async (dataUser, navigate) => {
+    
     try {
       let data = {};
       dataUser.name ? data = await axios.post("/users/register", dataUser) :

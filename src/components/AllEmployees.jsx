@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { messages } from "../helpers/message";
 import Loading from "./Loading";
 import { UseUser } from "../context/context";
+import { capitalizeFirstLetter } from "../helpers/capitalize";
 
 const AllEmployees = () => {
   const {user} = UseUser();
@@ -104,13 +105,13 @@ const AllEmployees = () => {
                         {allEmployees && allEmployees.map((item, i) => (
                           <tr key={item._id}>
                             <td>{i + 1}</td>
-                            <td>{item.firstName.charAt(0).toUpperCase() + item.firstName.slice(1)}</td>
-                            <td>{item.middleName.charAt(0).toUpperCase() + item.middleName.slice(1)}</td>
-                            <td>{item.lastName.charAt(0).toUpperCase() + item.lastName.slice(1)}</td>
-                            <td>{item.motherLastName.charAt(0).toUpperCase() + item.motherLastName.slice(1)}</td>
-                            <td>{item.contractType.charAt(0).toUpperCase() + item.contractType.slice(1)}</td>
+                            <td>{capitalizeFirstLetter(item.firstName)}</td>
+                            <td>{capitalizeFirstLetter(item.middleName)}</td>
+                            <td>{capitalizeFirstLetter(item.lastName)}</td>
+                            <td>{capitalizeFirstLetter(item.motherLastName)}</td>
+                            <td>{capitalizeFirstLetter(item.contractType)}</td>
                             <td>{item.id}</td>
-                            <td>{item.user.name.charAt(0).toUpperCase() + item.user.name.slice(1)}</td>
+                            <td>{capitalizeFirstLetter(item.user.name)}</td>
                           </tr>
                         ))}
                       </tbody>}

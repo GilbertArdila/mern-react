@@ -21,7 +21,7 @@ function App() {
 
   const Public = ({ children }) => {
 
-    return !user.login  && children 
+    return !user.login  ? children : {...user.role === "admin" ? <Navigate to="/employees"/>:<Navigate to="/allEmployees"/>}
   }
 
 
@@ -50,6 +50,8 @@ function App() {
         <Route path="/allEmployees" element={<SuperAdmin><AllEmployees /></SuperAdmin>} />/
         <Route path="/allUsers" element={<SuperAdmin><AllUsers /></SuperAdmin>} />/
         <Route path="/employees" element={<Private><Employees /></Private>} />/
+
+        <Route path="*" element={<Navigate to="/" />} />
         
 
       </Routes>
