@@ -42,7 +42,7 @@ const Employees = () => {
       if (!error.response.data.ok) {
         return messages("error", error.response.data.message, false, 1500);
       }
-      console.log("error function login: ", error.message)
+      console.log("error on getEmployees: ", error.message)
     }
   }, []);
 

@@ -8,7 +8,8 @@ const userContext = createContext();
 const initialState = {
   login: false,
   token: "",
-  name: ""
+  name: "",
+  role: ""
 };
 
 export const UserProvider = (props) => {
@@ -34,11 +35,18 @@ export const UserProvider = (props) => {
         const userLogin = {
           login: true,
           token: data.data.data.token,
-          name: data.data.data.name
+          name: data.data.data.name,
+          role: data.data.data.role
         };
         localStorage.setItem("user", JSON.stringify(userLogin));
         setUser(userLogin);
-        navigate('/employees') 
+        
+        if(data.data.data.role === "superAdmin"){
+          navigate('/allEmployees')
+        }else if(data.data.data.role === "admin"){
+          navigate('/employees') 
+        }
+        
         messages("success", data.data.message, false, 1500);
       }
 
