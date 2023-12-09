@@ -15,6 +15,7 @@ const initialState = {
 export const UserProvider = (props) => {
 
   const [user, setUser] = useState(initialState);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("user")) {
@@ -24,7 +25,7 @@ export const UserProvider = (props) => {
   }, [])
 
 
-  const actions = async (dataUser, navigate) => {
+  const actions = async (dataUser) => {
     
     try {
       let data = {};
@@ -33,21 +34,15 @@ export const UserProvider = (props) => {
 
      
       if (data.data.ok) {
+       
         const userLogin = {
           login: true,
-          token: data.data.data.token,
-          name: data.data.data.name,
+          token:data.data.data.token ,
+          name:data.data.data.name ,
           role: data.data.data.role
         };
-        localStorage.setItem("user", JSON.stringify(userLogin));
+         localStorage.setItem("user", JSON.stringify(userLogin));
         setUser(userLogin);
-        
-        if(data.data.data.role === "superAdmin"){
-          navigate('/allEmployees')
-        }else if(data.data.data.role === "admin"){
-          navigate('/employees') 
-        }
-        
         messages("success", data.data.message, false, 1500);
       }
 
@@ -70,7 +65,9 @@ export const UserProvider = (props) => {
   const value = {
     actions,
     exit,
-    user
+    user,
+    loading,
+    setLoading
   };
 
   return <userContext.Provider value={value} {...props} />

@@ -3,26 +3,22 @@ import { FaUserPlus } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import { messages } from "../helpers/message";
-import { useNavigate } from "react-router-dom";
 
 import { UseUser } from "../context/context";
 import Spinner from "./Spinner";
 
-
-
-
 const Register = () => {
-  const navigate = useNavigate();
-  const { actions } = UseUser();
+  
+  const { actions,loading, setLoading } = UseUser();
   const [dataUser, setDataUser] = useState({ email: '', password: '',name:'' });
   const [watchPassword, setWatchPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+ 
 
   const handleOnChange = (e) => {
     setDataUser({ ...dataUser, [e.target.name]: e.target.value })
   }
 
-  const onRegister = async (e) => {
+  const onRegister =  (e) => {
     try {
       e.preventDefault();
     if(!dataUser.email  || !dataUser.password || !dataUser.name ){
@@ -30,7 +26,7 @@ const Register = () => {
        
     }
     setLoading(true);
-    await actions(dataUser,navigate);
+    actions(dataUser);
     setLoading(false);
     } catch (error) {
       setLoading(false);

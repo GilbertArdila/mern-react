@@ -13,10 +13,10 @@ import { capitalizeFirstLetter } from "../helpers/capitalize";
 
 
 const Employees = () => {
-  const { user } = UseUser();
+  const { user, loading, setLoading } = UseUser();
   const [employees, setEmployees] = useState([]);
   const [employee, setEmployee] = useState();
-  const [loading, setLoading] = useState(false);
+  
 
   /**to use the modal */
   const [isEdit, setIsEdit] = useState(false);

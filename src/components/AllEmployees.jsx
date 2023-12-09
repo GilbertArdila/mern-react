@@ -7,12 +7,12 @@ import { UseUser } from "../context/context";
 import { capitalizeFirstLetter } from "../helpers/capitalize";
 
 const AllEmployees = () => {
-  const {user} = UseUser();
+  const {user,loading, setLoading} = UseUser();
     const [allEmployees, setAllEmployees] = useState([]);
     const [tableEmployees, setTableEmployees] = useState([]);
     const [searchedTerm, setSearchedTerm] = useState("");
 
-    const [loading, setLoading] = useState(false);
+    
 
     const getAllEmployees = useCallback(async () => {
         try {
